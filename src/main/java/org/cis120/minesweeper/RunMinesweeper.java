@@ -1,39 +1,17 @@
 package org.cis120.minesweeper;
 
-/**
- * CIS 120 HW09 - TicTacToe Demo
- * (c) University of Pennsylvania
- * Created by Bayley Tuch, Sabrina Green, and Nicolas Corona in Fall 2020.
- */
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImagingOpException;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
-/**
- * This class sets up the top-level frame and widgets for the GUI.
- * 
- * This game adheres to a Model-View-Controller design framework. This
- * framework is very effective for turn-based games. We STRONGLY
- * recommend you review these lecture slides, starting at slide 8,
- * for more details on Model-View-Controller:
- * https://www.seas.upenn.edu/~cis120/current/files/slides/lec37.pdf
- * 
- * In a Model-View-Controller framework, Game initializes the view,
- * implements a bit of controller functionality through the reset
- * button, and then instantiates a GameBoard. The GameBoard will
- * handle the rest of the game's view and controller functionality, and
- * it will instantiate a TicTacToe object to serve as the game's model.
- */
 public class RunMinesweeper implements Runnable {
     public void run() {
-        // NOTE: the 'final' keyword denotes immutability even for local variables.
-
         // Top-level frame in which game components live
         final JFrame frame = new JFrame("Minesweeper");
         frame.setLocation(300, 300);
@@ -54,12 +32,48 @@ public class RunMinesweeper implements Runnable {
         status.setBorderPainted(false);
         status.setContentAreaFilled(false);
         status.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 board.reset();
-            }
+            } // reset game when clicked
         });
         control_panel.add(status);
         board.setStatus(status);
+
+        JButton replay = new JButton();
+        replay.setBorderPainted(false);
+        replay.setContentAreaFilled(false);
+        replay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                board.replay();
+            } // replay when
+                                                                                     // clicked
+        });
+        control_panel.add(replay);
+        board.setReplay(replay);
+
+        JButton help = new JButton();
+        help.setBorderPainted(false);
+        help.setContentAreaFilled(false);
+        try {
+            BufferedReader instructionsReader = new BufferedReader(new FileReader(
+                    new File("files/instructions.txt")));
+            final String instructions = instructionsReader.lines().collect(
+                    Collectors.joining(System.lineSeparator()));
+            help.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    JOptionPane.showMessageDialog(frame, instructions); // show instructions written
+                                                                        // in instructions.txt
+                }
+            });
+            control_panel.add(help);
+            board.setHelp(help);
+            JOptionPane.showMessageDialog(frame, instructions);
+        } catch (IOException e) {
+            System.out.println("IOException: Missing instructions file");
+        }
 
         // Put the frame on the screen
         frame.pack();
@@ -67,6 +81,6 @@ public class RunMinesweeper implements Runnable {
         frame.setVisible(true);
 
         // Start the game
-        board.reset();
+        board.loadGame();
     }
 }

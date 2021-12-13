@@ -1,0 +1,19 @@
+
+===========
+MINESWEEPER
+===========
+
+Welcome to Minesweeper 120!
+
+The game board consists of 16x16 tiles, and 24 of these tiles have mines. Your goal is to uncover
+all non-mine tiles without uncovering mined tiles.
+
+Each non-mine tile has a number denoting the number of tiles around it that contain mines. The tiles
+around it are defined as the 8 surrounding tiles (cardinal directions and diagonals).
+
+Left click to uncover a tile, and right click to flag/unflag a tile. Flagging a tile prevents you
+from uncovering the tile. You do not need to flag all mined tiles to win the game.
+
+The smiley face is a reset button that restarts the game. The play button replays the current game
+automatically. If the current game is not over, then you can continue uncovering tiles after
+replaying.
